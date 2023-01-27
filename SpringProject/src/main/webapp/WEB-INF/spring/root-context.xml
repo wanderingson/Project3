@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	
+	<context:component-scan base-package="com.project.shop" />	
+
+	<!-- 데이터베이스 연결 --> 
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" > 
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/> 
+		<property name="url" value="jdbc:oracle:thin:@127.0.0.1:1521:xe" /> 
+		<property name="username" value="hr"/> 
+		<property name="password" value="hr"/> 
+	</bean>
+
+	<!-- SqlSessionFactory 객체 (MyBatis-spring 라이브러리의 클래스)-->
+	<!-- SqlSession 을 만들어 내는 객체 -->
+	<!-- SqlSession : Connection 생성, SQL 전달, 결과 리턴하는 역할 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> 
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:/mybatis-config.xml" />
+		<property name="mapperLocations" value="classpath:/mapper/*.xml" />
+	</bean>
+
+ 	<!-- SqlSession 인터페이스를 구현한 SqlSessionTemplate(SqlSession) 객체 -->
+ 	<!-- DAO 가 의존하는 객체 -->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" > 
+		<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory" /> 
+	</bean>
+	
+	<!-- basePackage 속성에서 dao 아래 인터페이스들을 모두 Mapper 인터페이스에 대응하여 Mapper 객체 생성가능하도록 해줌 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"> 
+		<property name="basePackage" value="com.project.shop.dao" />
+	</bean>
+	
+	<!-- Service 클래스에서 예외발생 시 예외발생 전에 실행된 모든 DAO 메소드 명령을 ROLLBACK 처리해주는 역할 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"> 
+		<property name="dataSource" ref="dataSource" /> 
+	</bean>
+	
+	<tx:annotation-driven transaction-manager="transactionManager"/> 
+		
+</beans>

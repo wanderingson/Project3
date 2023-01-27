@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+  <mapper namespace="com.project.shop.dao.ProductDAO">
+	  
+  	 <resultMap type="allproductVO" id="allproduct">
+		<result property="productnum" column="cateNum"/>	  		<!-- 대분류 번호 -->
+		<result property="category_subName" column="cateSubName"/>	<!--소분류 이름 -->
+		<result property="product" column="prdName"/> 		  		<!-- 상품이름 -->		
+		<result property="descrip" column="prdDescription"/> 		<!-- 상품표현 -->
+		<result property="price" column="prdprice"/> 	  			<!-- 상품가격  -->
+	  </resultMap>
+	 
+	 <resultMap type="productR" id="proReview">
+		<result property="id" column="rid"/>	  		<!-- 사용자 아이디 -->
+		<result property="review" column="review"/>	<!-- 리뷰 내용 -->
+		<result property="date1" column="rdate"/>		<!-- 작성날짜 -->		
+	  </resultMap>
+		
+		
+	<!-- ======================================================== -->	
+	
+	<!-- 카테고리 페이징  -->
+	<select id="getMainCount" resultType="allproductVO" resultMap="allproduct" parameterType="int">
+	  SELECT COUNT(*) as count FROM product 
+	  WHERE cateNum LIKE '%' || #{num} || '%'
+	</select>
+	
+	<select id="selectAllCa" resultType="allproductVO" resultMap="allproduct" parameterType="hashMap">
+	<!-- SELECT * FROM (SELECT * FROM 
+	(SELECT ROWNUM row_num, product.* FROM product WHERE prdName LIKE '%' || #{para1} || '%'
+	)WHERE row_num >= #{para2}
+	) <![CDATA[where rownum <= #{para3}]]> -->
+	  select *
+	  from (select rownum as rn,product.* from product where cateNum like '%' || #{para1} || '%')
+	  where rn between #{para2} and #{para3}
+	</select> 
+	
+	<!-- ======================================================== -->
+  	
+  	<!-- 상품 상세페이지 -->
+  	<select id="DetailProductPage" resultType="allproductVO" parameterType="String" resultMap="allproduct">
+  	  SELECT *
+	  FROM product
+	  WHERE prdName = #{product}
+  	</select>
+  	
+  	<!-- 상세페이지 리뷰 -->
+  	<select id="ProductReview" resultType="productR" parameterType="String" resultMap="proReview">
+  	  SELECT *
+	  FROM reviewboard
+	  WHERE rproduct = #{pname}
+  	</select>
+  
+  
+  	<select id="RandomProduct" resultType="allproductVO" resultMap="allproduct">
+	select * from 
+	 (select prdName,prdDescription,prdprice from product order by dbms_random.value)
+	<![CDATA[where rownum <= 9]]>
+	</select>
+	
+	<select id="NewProAll" resultType="allproductVO" resultMap="allproduct">
+	select * from product
+	where cateNum in (1,2,4) and cateSubName in ('생선류','기타') or prdname ='주황빛 달콤함 귤 1.5kg'
+	</select>
+
+
+
+	<select id="getAllCount" resultType="allproductVO" resultMap="allproduct" parameterType="String">
+	SELECT COUNT(*) as count FROM product 
+	WHERE prdName LIKE '%' || #{search} || '%'
+	</select>
+	
+	<select id ="selectAllMember" resultType="allproductVO" resultMap="allproduct" parameterType="hashMap">
+	<!-- SELECT * FROM (SELECT * FROM 
+	(SELECT ROWNUM row_num, product.* FROM product WHERE prdName LIKE '%' || #{para1} || '%'
+	)WHERE row_num >= #{para2}
+	) <![CDATA[where rownum <= #{para3}]]> -->
+	  select *
+	  from (select rownum as rn,product.* from product where prdName like '%' || #{para1} || '%')
+	  where rn between #{para2} and #{para3}
+	</select> 
+	
+	<insert id="insert_product">
+	insert into Product values(#{param1},#{param2},#{param3},#{param4},#{param5})
+	</insert>
+
+
+	<select id="getAllInfo" resultType="allproductVO" resultMap="allproduct">
+	  SELECT * FROM Product order by cateNum,cateSubName
+ 	</select>
+ 
+ 	<select id="prdone" resultMap="allproduct" resultType="allproductVO">
+ 	  select count(*) as count from product where prdName=#{prdname}
+ 	</select>
+ 
+ 	<select id="prdonename" resultMap="allproduct" resultType="allproductVO">
+ 	  select * from product where prdname=#{prdname}
+ 	</select>
+ 
+ 	<update id="prdUpdate">
+ 	  update product set cateNum=#{param1},cateSubName=#{param2},
+ 	  prdName=#{param3},prdDescription=#{param4},prdPrice=#{param5}
+ 	  where prdName=#{param6}
+ 	</update>
+ 
+ 	<delete id="prddelete">
+ 	  delete from Product where prdName=#{dprdname}
+ 	</delete>
+  
+  
+  
+  </mapper>

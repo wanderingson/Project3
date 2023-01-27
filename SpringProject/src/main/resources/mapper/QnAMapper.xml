@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.shop.dao.QnADAO">
+
+<select id="selectlist" resultType="qnaVO">
+	SELECT * FROM qna ORDER BY qnaId DESC
+</select>
+
+<select id="nextval" resultType="int">
+	select max(qnaId) from qna
+</select> 
+
+<insert id="write" parameterType="qnaVO">
+	insert into qna (qnaId, qnaTitle, qnaContent, qnaDate,  qnaCategory, memid)
+	values(#{qnaId},#{qnaTitle},#{qnaContent},sysdate+9/24,
+	#{qnaCategory},#{memId})
+</insert>
+
+<select id="selectById" resultType="qnaVO">
+	select * from qna where qnaId=#{qnaId}
+</select>
+
+<update id="update" parameterType="qnaVO">
+	update qna set qnaTitle=#{qnaTitle}, qnaContent=#{qnaContent},
+	qnaCategory=#{qnaCategory} where qnaId=#{qnaId}
+</update>
+
+<update id="answer" parameterType="qnaVO">
+	update qna set qnaAnswer=#{qnaAnswer} where qnaId=#{qnaId}
+</update>
+</mapper>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+  <mapper namespace="com.project.shop.dao.CartDAO">
+  
+  
+  	  <resultMap type="cart" id="cart1">
+		<result property="name" column="prdName"/>	  		<!-- 물품이름 -->
+		<result property="price1" column="prdPrice"/>	<!-- 상품가격-->
+		<result property="num" column="cQuantity"/>		<!-- 물품수량  -->		
+	  </resultMap>
+	  
+	   
+	
+  	
+  	<!-- 장바구니 상품의 유무 확인 -->
+  	<select id="getOneCartList" resultType="cart" parameterType="String" resultMap="cart1">
+  	  SELECT prdName
+	  FROM cart
+	  WHERE memid = #{id}
+  	</select>
+  	
+  	<!-- 장바구니 창에서 장바구니 내역 전체 출력 -->
+  	<select id="getCartList" resultType="cart" parameterType="String" resultMap="cart1">
+  	  SELECT p.prdName, p.prdPrice, c.cQuantity 
+	  FROM CART c, PRODUCT p
+	  WHERE c.prdName=p.prdName
+	  AND c.memid = #{id} 
+  	</select>
+  	
+  	<!-- 장바구니 총합가격  -->
+  	<select id="select_cartPrice" resultType="cart" parameterType="String" resultMap="cart1">
+  	  SELECT p.prdPrice, c.cQuantity
+	  FROM CART c, PRODUCT p
+	  WHERE c.prdName=p.prdName
+	  AND c.memID=#{id}
+  	</select>
+  	
+  	<!-- 장바구니에 상품이 없을때 -->
+ 	<insert id="InsertBasket">
+	  INSERT INTO CART(memid,prdName,cQuantity)
+	  VALUES (#{id},#{name},#{num})
+	</insert>
+  	
+  	<!-- 장바구니에 상품이 있을때 -->
+  	<update id="UpdateBasket">
+  	  UPDATE CART
+	  SET cQuantity=#{num}
+	  WHERE memID=#{id}
+	  AND prdName=#{name}
+  	</update>
+  
+  	<!-- 장바구니 하나 삭제 -->
+  	<delete id="DeleteBasket">
+  	  DELETE
+	  FROM CART
+	  WHERE memID= #{id}
+	  AND prdName= #{name}
+  	</delete>
+  	
+  	<delete id="DeleteAllB">
+  	  DELETE
+	  FROM CART
+	  WHERE memID=#{id}
+  	</delete>
+  
+  
+  </mapper>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
+<configuration>
+	<typeAliases>
+		<typeAlias alias="maincaVO" type="com.project.shop.vo.CategoryVO"/>
+		<typeAlias alias="allproductVO" type="com.project.shop.vo.ProductVO"/>
+		<typeAlias alias="productR" type="com.project.shop.vo.PReviewVO"/>
+		<typeAlias alias="cart" type="com.project.shop.vo.CartVO"/>
+		<typeAlias alias="grade" type="com.project.shop.vo.GradeVO"/>
+		<typeAlias alias="memVO" type="com.project.shop.vo.MemInfoVO"/>
+		<typeAlias alias="orderVO" type="com.project.shop.vo.OrderVO"/>
+		<typeAlias alias="orderdetailsVO" type="com.project.shop.vo.OrderDetailsVO"/>
+		<typeAlias alias="reviewboardVO" type="com.project.shop.vo.ReviewBoardVO"/>
+		<typeAlias alias="bbsvo" type="com.project.shop.vo.BbsVO"/>
+		<typeAlias alias="qnaVO" type="com.project.shop.vo.QnAVO"/>
+	</typeAliases>
+</configuration>
+
+
+

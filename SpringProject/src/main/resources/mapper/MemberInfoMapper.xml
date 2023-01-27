@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+  <mapper namespace="com.project.shop.dao.MemInfoDAO">
+	<resultMap type="memVO" id="mem">
+		<result property="name" column="memname"/>	<!-- 회원명 -->
+		<result property="id" column="memid"/>		<!-- 아이디 -->
+		<result property="pw" column="mempw"/> 		  		<!-- 비번 -->		
+		<result property="tel" column="memtel"/> 		<!-- 전화번호 -->
+		<result property="email" column="mememail"/> 	  			<!-- 이메일  -->
+		<result property="address" column="address1"/> 	  			<!-- 우편주소  -->
+		<result property="address2" column="address2"/> 	  			<!-- 주소  -->
+		<result property="address3" column="address3"/> 	  			<!-- 상세주소  -->
+		<result property="birth" column="membirth"/> 	  			<!-- 생년월일  -->
+		<result property="gName" column="grade_name"/> 	  			<!-- 회원등급  -->
+		<result property="memPoint" column="mem_point"/> 	  			<!-- 등급포인트  -->
+	  </resultMap>
+	  
+	<!-- 마이페이지 관련 -->
+<!-- =========================================================================================== -->
+	  
+	  <!-- 해당 id 의 회원정보 가져오기 -->
+	  <select id="select_memInfo" resultType="memVO" resultMap="mem">
+		SELECT * FROM Member 
+		WHERE memid=#{mem_id}
+	  </select>
+	  
+	  <!-- 회원정보 수정 -->
+	  <select id="update_memInfo" resultType="memVO" resultMap="mem">
+		UPDATE Member 
+		SET mempw=#{param2}, memtel=#{param3}, address1=#{param4}, address2=#{param5}, address3=#{param6}
+		WHERE memid=#{param1}
+	  </select>
+	  
+<!-- =========================================================================================== -->
+
+	
+	<!-- 회원가입 관련 -->
+<!-- =========================================================================================== -->
+	<!-- 회원가입 -->
+	<insert id="memberInsert" parameterType="memVO">
+		INSERT INTO Member(memid, mempw, memname, mememail, memtel, address1, address2, address3, membirth)
+		VALUES (#{id, jdbcType=VARCHAR},#{pw, jdbcType=VARCHAR},#{name, jdbcType=VARCHAR},#{email, jdbcType=VARCHAR},
+		#{tel, jdbcType=VARCHAR},#{address ,jdbcType=VARCHAR},#{address2,jdbcType=VARCHAR},#{address3,jdbcType=VARCHAR},
+		#{birth,jdbcType=VARCHAR})
+	</insert>
+	
+	<!-- 회원 전체 가져오기 -->
+	<select id="getAllInfo" resultType="memVO" resultMap="mem">
+		SELECT * FROM Member
+	</select>
+	
+<!-- =========================================================================================== -->
+	
+	<!-- 회원 탈퇴 -->
+<!-- =========================================================================================== -->
+	<delete id="memberDelete" parameterType="memVO">
+		DELETE FROM Member
+		WHERE MEMID=#{id, jdbcType=VARCHAR} and MEMPW=#{pw, jdbcType=VARCHAR}
+	</delete>	
+<!-- =========================================================================================== -->
+
+	<!-- 로그인 페이지관련 -->
+<!-- =========================================================================================== -->
+	
+	<!-- 로그인 -->  
+	<select id="select_loginCheck" resultType="memVO" resultMap="mem">
+	  SELECT memid,mempw FROM member
+	</select>
+	  
+	  <!-- 아이디 찾기 -->
+	  <select id="findId" resultType="String" parameterType="memVO">
+	    SELECT MEMID 
+	    FROM MEMBER 
+	    WHERE MEMNAME=#{name} 
+	    AND MEMTEL=#{tel}
+	  </select>
+	  
+	  <!-- 비번 찾기 -->
+	  <select id="FindPW" resultType="String" parameterType="memVO">
+	    SELECT MEMPW 
+	    FROM MEMBER 
+	    WHERE MEMID=#{id}
+	    AND MEMNAME=#{name} 
+	    AND MEMTEL=#{tel}
+	  </select>
+	  
+<!-- =========================================================================================== -->
+
+
+	<!-- 주문페이지 -->
+<!-- =========================================================================================== -->
+	  
+	  <!-- 회원등급, 적립금 수정해주기 -->
+	<select id="update_grade" resultType="memVO" resultMap="mem">
+		UPDATE Member 
+		SET grade_name=#{param2}, mem_point=#{param3} WHERE memid=#{param1}
+	</select>
+	  
+<!-- =========================================================================================== -->
+	  
+
+  </mapper>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.shop.dao.OrderDetailsDAO">
+
+<!-- 해당 주문번호의 상세 내역 가져오기 -->
+<select id="getOrderDetailsInfo" resultType="orderdetailsVO">
+	SELECT * FROM OrderDetails WHERE order_num=#{order_num} ORDER BY order_details_num
+</select>
+
+<!-- "환불요청" 상태인 상세내역 가져오기 -->
+<select id="getAllRefundChk" resultType="orderdetailsVO">
+	SELECT * FROM OrderDetails WHERE delivery_state='환불요청'
+	ORDER BY order_details_num
+</select>
+
+<!-- "환불완료" 상태인 상세내역 가져오기(관리자) -->
+<select id="getAllRefund" resultType="orderdetailsVO">
+	SELECT * FROM OrderDetails WHERE delivery_state='환불완료' ORDER BY order_details_num
+</select>
+
+<!-- "환불요청" 버튼 눌렀을 때 "환불요청"으로 바꿔주기 -->
+<select id="update_deliveryState" resultType="orderdetailsVO">
+	UPDATE OrderDetails SET delivery_state='환불요청' WHERE order_details_num=#{order_details_num}
+</select>
+
+<!-- 상세주문내역에서 모든 상품을 환불상태 확인  -->
+<select id="check_reqRefundCnt" resultType="int">
+	SELECT count(*) as cnt FROM OrderDetails
+	WHERE (delivery_state='배송완료' or delivery_state='주문요청')
+	AND order_num=#{order_num}
+</select>
+
+<!-- 상세주문내역에서 모든 상품이 환불요청상태일 때 주문내역 상태 환불요청으로 바꿔주기  -->
+<select id="update_reqRefund" resultType="orderdetailsVO">
+	UPDATE Orders SET delivery_state='환불요청' WHERE order_num=#{order_num}
+</select>
+
+<!-- 환불확인 해주면 해당 상품 환불완료로 변경해주기 -->
+<select id="update_refundDetails" resultType="orderdetailsVO">
+	UPDATE OrderDetails SET delivery_state='환불완료'
+	WHERE order_details_num=#{order_details_num}
+</select> 
+
+<!-- 상세주문내역에서 모든 상품을 환불상태 확인  -->
+<select id="check_refundCnt" resultType="int">
+	SELECT count(*) as cnt FROM OrderDetails 
+	WHERE (delivery_state='배송완료' or delivery_state='주문요청' or delivery_state='환불요청')
+	AND order_num=#{order_num}
+</select> 
+
+<!-- 주문상세내역이 모두 환불완료일 때, 주문내역을 환불완료로 바꿔주기 -->
+<select id="update_refundOrder" resultType="orderdetailsVO">
+	UPDATE Orders SET delivery_state='환불완료' 
+	WHERE order_num=#{order_num}
+</select>
+
+<!-- 관리자가 주문확인 해주면 주문상세내역 배송완료로 바꿔주기 -->
+<select id="checkOrder2" resultType="orderdetailsVO">
+	UPDATE OrderDetails SET delivery_state='배송완료' WHERE order_num=#{order_num}
+</select>  
+
+<select id="select_listMainName" resultType="String">
+	SELECT product_name FROM OrderDetails WHERE order_num=#{order_num} AND ROWNUM=1
+</select>  
+
+<!-- 해당 주문의 상품개수 가져오기 -->
+<select id="select_count" resultType="Integer">
+	SELECT COUNT(*) FROM OrderDetails WHERE order_num=#{order_num}
+</select>  
+
+
+</mapper>

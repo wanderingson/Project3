@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.shop.dao.OrderDAO">
+
+
+<!-- '배송완료' 상태인 주문내역 전체 가져오기(관리자) -->
+<select id="getAllOrders" resultType="orderVO">
+	SELECT * FROM Orders WHERE delivery_state='배송완료' ORDER BY order_date DESC
+</select>
+
+<!-- '주문요청' 상태인 주문내역 전체 가져오기(관리자) -->
+<select id="getAllCheckOrders" resultType="orderVO">
+	SELECT * FROM Orders WHERE delivery_state='주문요청' ORDER BY order_date DESC
+</select>
+	
+
+
+<!-- 해당 id 의 주문목록 가져오기(관리자) -->
+<select id="getInfo" resultType="orderVO">
+	SELECT * FROM Orders WHERE mem_id=#{mem_id} ORDER BY order_date DESC
+</select>
+
+<!-- 주문번호를 통해 한사람 정보 가져오기(관리자) -->
+<select id="getOneInfo" resultType="orderVO">
+	SELECT * FROM Orders WHERE order_num=#{order_num}
+</select>
+
+<!-- 주문버튼 눌렀을 때 DB 에 정보 입력해주기 -->
+<select id="insert_orderInfo" parameterType="orderVO">
+	INSERT INTO Orders(order_num, mem_id, address1, address2, address3, tel, total_price, delivery_message)  
+	VALUES(order_num.NEXTVAL, #{param1}, #{param2}, #{param3}, #{param4}, #{param5}, #{param6}, #{param7})
+</select>
+
+<!-- "주문확인" 버튼 눌렀을 때 주문내역에 있는 "주문요청" => "배송완료" 로 바꿔주기 -->
+<select id="checkOrder" resultType="orderVO">
+	UPDATE Orders SET delivery_state='배송완료' WHERE order_num=#{order_num}
+</select>
+
+<!-- OrderDetails insert (결제 시, 사용) -->
+<!-- 시퀀스 세션때문에 OrderDAO 에서 사용 -->
+<select id="insert_orderDeatailsInfo">
+	INSERT INTO OrderDetails (order_details_num, order_num, product_name, product_qty, order_price)  
+	VALUES(order_details_num.NEXTVAL, order_num.CURRVAL, #{param1}, #{param2}, #{param3})
+</select>
+
+<!-- 환불가능여부 확인 -->
+<!-- 주문날짜에서 14일 지나면 환불x -->
+<select id="select_refundCheck" resultType="orderVO">
+	SELECT (SYSDATE - (SELECT order_date FROM Orders WHERE order_num=#{order_num})) FROM dual
+</select>
+
+</mapper>
+
+

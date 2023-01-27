@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.project.shop.dao.BbsDAO">
+
+<select id="selectlist" resultType="bbsvo">
+		SELECT * FROM bbs ORDER BY bbsId DESC
+</select>
+
+<select id="nextval" resultType="Integer">
+		SELECT max(bbsId) FROM bbs
+</select>
+
+<insert id="bbsWrite" parameterType="bbsvo">
+	INSERT INTO bbs (bbsId, bbsTitle, bbsContent, bbsDate,bbsHit, bbsCategory, memID)
+	VALUES (#{bbsId}, #{bbsTitle}, #{bbsContent}, sysdate+9/24,0, #{bbsCategory},#{memID} )
+</insert>
+
+<select resultType="bbsvo" id="selectById">
+select * from bbs where bbsId=#{bbsId} </select>
+
+ <update id="bbsUpdate" parameterType="bbsvo">
+	UPDATE bbs
+	SET bbsCategory=#{bbsCategory},
+	bbsTitle=#{bbsTitle}, bbsContent=#{bbsContent}
+	WHERE bbsId=#{bbsId}
+</update>
+
+<delete id="bbsDelete">
+	DELETE
+	FROM bbs
+	WHERE bbsId=#{bbsId}
+</delete>
+
+<update id="hitupdate">
+UPDATE bbs SET bbsHit = bbsHit + 1 WHERE bbsId = #{bbsid}
+
+</update>
+
+</mapper>
