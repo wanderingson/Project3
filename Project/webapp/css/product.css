@@ -1,0 +1,38 @@
+@charset "UTF-8";
+
+  #row1{height: 50px}
+  #div1{color: #9e9e9e;}
+  #div2{padding-top: 100px; 
+  		display: flex; 
+  		justify-content: flex-end; 
+  		align-items: flex-end;
+  		padding-bottom: 30px;
+  }
+  #div3{
+	display: block;
+	justify-content: center;  
+  }
+  #name{
+  		padding-top: 15px;
+  		font-size: 30px;
+  		line-height: 14px;	
+  		font-weight: 400;
+  }
+  #send1{color: #969494;}
+  #basket{ height: 50px; text-align: center; width: 100%; display: block;}
+  #tmes1{font-size: 15px; line-height: 26px; padding-right: 12px; font-weight: 500;}
+  #tmes2{font-size: 22px; line-height: 30px; padding-left: 10px;}
+  #total{font-size: 32px; font-weight: bold; line-height: 36px;}
+  .basketmes{display: inline-block;}
+  .price1{ font-size: 33px; font-weight: bold; }
+  .price2{ font-weight: bold; font-size: 20px;}
+  .hr1{width: 500px; color: #bfbfbf;}
+  .p1{font-size: 13px;
+  	  color: #969494;
+  } 
+  .sel1{font-size: 13px; padding-top: 4px;}
+  .centerline{height: 40px;}
+  .container{width: 1050px;}
+  .basketfont{padding-top: 140px;}
+  .reviewline{ background-color: black;}
+
